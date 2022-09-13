@@ -1,0 +1,5 @@
+# goland and vscode project files
+.idea
+
+# 迁移产生的日志文件
+store

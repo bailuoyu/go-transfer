@@ -1,0 +1,48 @@
+# mysql配置
+addr: 127.0.0.1:3306
+user: root
+pass: root
+charset : utf8
+slave_id: 1001 #slave ID，切记不可和任何mysql从机及go-transfer服务冲突
+flavor: mysql #mysql or mariadb,默认mysql
+
+#系统相关配置
+data_dir: ./bin/store #应用产生的数据存放地址，包括日志、缓存数据等，默认当前运行目录下store文件夹
+#logger:
+#  level: info #日志级别；支持：debug|info|warn|error，默认info
+
+#skip_master_data: true  #跳过主表全数据检查，开启之后初始化数据会锁表
+#init_log_file: binlog20000.021060 #初始化日志文件，用于初次执行1236错误，磁盘毁坏，缓存日志丢失
+#init_log_pos: 4 #初始化日志位置，用于初次执行1236错误，磁盘毁坏，缓存日志丢失
+#init_log_force: false #是否强制从指定位置开始，默认false，仅用于纠正错误时特殊执行
+
+#maxprocs: 50 #并发协（线）程数量，默认为: CPU核数*2；一般情况下不需要设置此项
+#bulk_size: 1000 #每批处理数量，不写默认100，可以根据带宽、机器性能等调整;如果是全量数据初始化时redis建议设为1000，其他接收端酌情调大
+
+#prometheus相关配置
+#enable_exporter: true #是否启用prometheus exporter，默认false
+#exporter_addr: 9595 #prometheus exporter端口，默认9595
+
+enable_web_admin: false #是否启用web admin，默认false
+web_admin_port: 8070 #web监控端口,默认8060
+
+#目标类型
+target: kafka
+
+#kafka连接配置
+kafka_addrs: 127.0.0.1:9092 #kafka连接地址，多个用逗号分隔
+kafka_version: 2  #kafka版本，1-2，默认2
+#kafka_sasl_user:  #kafka SASL_PLAINTEXT认证模式 用户名
+#kafka_sasl_password: #kafka SASL_PLAINTEXT认证模式 密码
+#kafka_sasl_type: SCRAM-SHA-512  #加密方式，默认SCRAM-SHA-512
+
+rule:
+  -
+    schema: demodb #数据库名称
+    table: user #表名称
+    #include_columns:
+    value_encoder: json
+    reserve_raw_data: true #保留update之前的数据，针对rocketmq、kafka、rabbitmq有用;默认为false
+#    date_formatter: 2006-01-02T00:00:00+08:00 #date类型格式化
+    datetime_formatter: 2006-01-02T15:04:05+08:00 #datetime、timestamp类型格式化
+    kafka_topic: user_transfer
